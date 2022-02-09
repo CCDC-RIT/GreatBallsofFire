@@ -1,0 +1,39 @@
+{
+  "teams": [
+    1,
+    2
+  ],
+  "networks": [
+    {
+      "ip": "10.x.10",
+      "name": "cloud2",
+      "hosts": [
+        {
+          "ip": "9",
+          "name": "test",
+          "os": "zach"
+        },
+        {
+          "ip": "19",
+          "name": "jason",
+          "os": "is awesome"
+        }
+      ]
+    },{
+    "ip": "10.x.10",
+      "name": "network2",
+      "hosts": [
+        {
+          "ip": "9",
+          "name": "test",
+          "os": "zach"
+        },
+        {
+          "ip": "19",
+          "name": "jason",
+          "os": "is awesome"
+        }
+      ]
+    }
+  ]
+}
