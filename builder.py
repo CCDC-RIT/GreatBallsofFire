@@ -1,10 +1,14 @@
 # /usr/bin/env python3
 
 """
+
     builder.py is a tool to build network topologies
     Authors:
         Jason Howe
         Zach Price
+        Micah Martin
+    
+    ** Note: Lot's of code is built from Topology Generator
 """
 import json
 import sys
@@ -27,12 +31,29 @@ def prompt(text="", color=COLOR):
 
 def addRemoting():
     # add a remoting protocol
-    pass
+    data = {}
+    data['remotingProtocol'] = prompt("What is the remoting protocol?", "green")
+    data['ports'] = []
+    while True:
+        newServicePort = prompt("What is a port for the protocol?", "green")
+        data['ports'] += newServicePort
+        isGood = prompt("Correct? [Y/n]", "green")
+        if isGood in ("", "y", "yes"):
+            break
+    return data
 
 
 def addService():
-    pass
-
+    data = {}
+    data['serviceName'] = prompt("What is the service name?", "green")
+    data['ports'] = []
+    while True:
+        newServicePort = prompt("What is a port for the service?", "green")
+        data['ports'] += newServicePort
+        isGood = prompt("Correct? [Y/n]", "green")
+        if isGood in ("", "y", "yes"):
+            break
+    return data
 
 def addHost(network):
     '''
@@ -45,10 +66,11 @@ def addHost(network):
         os = prompt("OS: ")
         data['remoting'] = []
         while True:
-            newRemoting = prompt("Add a remoting to this host? [Y/n]", "green")
+            newRemoting = prompt("Add a remoting protocol to this host? [Y/n]", "green")
             if newRemoting not in ("", "y", "yes"):
                 break
             data['remoting'] += [addRemoting()]
+        data['service'] = []
         while True:
             newService = prompt("Add a service to this host? [Y/n]", "green")
             if newService not in ("", "y", "yes"):
@@ -57,7 +79,7 @@ def addHost(network):
         isGood = prompt("Correct? [Y/n]", "green")
         if isGood in ("", "y", "yes"):
             # If its right, return the host info
-            return {'ip': ip, 'name': hostname, 'os': os}
+            return {'ip': ip, 'name': hostname, 'os': os, 'remoting protocol': data["remoting"], 'services': data["service"]}
 
 
 def addNetwork():
@@ -109,7 +131,6 @@ def main():
     '''
     config = {}
     # Get the teams
-    config['teams'] = getTeamRange()
     # Get the networks
     config['networks'] = addNetworks()
     print(json.dumps(config, indent=4))
