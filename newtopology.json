@@ -1,31 +1,27 @@
 {
   "networks": [
     {
-      "ip": "172.16.x",
+      "ip": "10.2.5",
       "name": "cloud",
       "hosts": [
         {
-          "ip": "12",
+          "ip": "45",
           "name": "test",
           "os": "test",
           "remoting protocol": [
             {
-              "remotingProtocol": "test",
+              "remotingProtocol": "ssh",
               "ports": [
                 "2",
                 "2"
               ]
+            },
+            {
+              "remotingProtocol": "",
+              "ports": []
             }
           ],
-          "services": [
-            {
-              "serviceName": "test",
-              "ports": [
-                "2",
-                "3"
-              ]
-            }
-          ]
+          "services": []
         }
       ]
     }

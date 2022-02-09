@@ -91,11 +91,10 @@ def addNetwork():
     while True:
         try:
             ip = prompt(
-                'Network IP (e.g. "10.2.x.0"): ')
+                'Network IP (e.g. "10.2.1.0"): ')
             ip = ".".join(ip.split(".")[:3]).lower()
             data['ip'] = ip
-            # Make sure there is an 'x' in the ip
-            ip.index("x")
+            # Make sure there is an 'x' in the ip  
             break
         except Exception as E:
             print("Invalid Network Name")
