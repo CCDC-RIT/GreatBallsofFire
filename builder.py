@@ -36,9 +36,9 @@ def addRemoting():
     data['ports'] = []
     while True:
         newServicePort = prompt("What is a port for the protocol?", "green")
-        data['ports'] += newServicePort
+        data['ports'].append(newServicePort)
         isGood = prompt("Correct? [Y/n]", "green")
-        if isGood in ("", "y", "yes"):
+        if isGood in ("", "y", "yes", "Y", "Yes"):
             break
     return data
 
@@ -49,9 +49,9 @@ def addService():
     data['ports'] = []
     while True:
         newServicePort = prompt("What is a port for the service?", "green")
-        data['ports'] += newServicePort
+        data['ports'].append(newServicePort)
         isGood = prompt("Correct? [Y/n]", "green")
-        if isGood in ("", "y", "yes"):
+        if isGood in ("", "y", "yes", "Y", "Yes"):
             break
     return data
 
@@ -67,17 +67,17 @@ def addHost(network):
         data['remoting'] = []
         while True:
             newRemoting = prompt("Add a remoting protocol to this host? [Y/n]", "green")
-            if newRemoting not in ("", "y", "yes"):
+            if newRemoting not in ("", "y", "yes", "Y", "Yes"):
                 break
             data['remoting'] += [addRemoting()]
         data['service'] = []
         while True:
             newService = prompt("Add a service to this host? [Y/n]", "green")
-            if newService not in ("", "y", "yes"):
+            if newService not in ("", "y", "yes", "Y", "Yes"):
                 break
             data['service'] += [addService()]
         isGood = prompt("Correct? [Y/n]", "green")
-        if isGood in ("", "y", "yes"):
+        if isGood in ("", "y", "yes", "Y", "Yes"):
             # If its right, return the host info
             return {'ip': ip, 'name': hostname, 'os': os, 'remoting protocol': data["remoting"], 'services': data["service"]}
 
@@ -105,7 +105,7 @@ def addNetwork():
     while True:
         # Keep adding hosts until we are done
         newHost = prompt("Add a host to this network? [Y/n]", "green")
-        if newHost not in ("", "y", "yes"):
+        if newHost not in ("", "y", "yes", "Y", "Yes"):
             break
         # Create a new host and add it to the dataset
         data['hosts'] += [addHost(ip)]
@@ -117,7 +117,7 @@ def addNetworks():
     while True:
         # Keep adding networks until we are done
         newNetwork = prompt("Add network? [Y/n]", "green")
-        if newNetwork not in ("", "y", "yes"):
+        if newNetwork not in ("", "y", "yes", "Y", "Yes"):
             break
         # Create a new network and add it to the dataset
         data += [addNetwork()]
