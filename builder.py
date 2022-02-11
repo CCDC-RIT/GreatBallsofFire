@@ -35,11 +35,15 @@ def addRemoting():
     data['remotingProtocol'] = prompt("What is the remoting protocol?", "green")
     data['ports'] = []
     while True:
-        newServicePort = prompt("What is a port for the protocol?", "green")
-        data['ports'].append(newServicePort)
+        newServicePort = prompt("What are the ports for the protocol (Split multiple ports with commas)?", "green")
+        tokens = newServicePort.split(",")
+        for ports in tokens:
+            data['ports'].append(ports)
         isGood = prompt("Correct? [Y/n]", "green")
         if isGood in ("", "y", "yes", "Y", "Yes"):
             break
+        else:
+            data['ports'] = []
     return data
 
 
@@ -49,10 +53,14 @@ def addService():
     data['ports'] = []
     while True:
         newServicePort = prompt("What is a port for the service?", "green")
-        data['ports'].append(newServicePort)
+        tokens = newServicePort.split(",")
+        for ports in tokens:
+            data['ports'].append(ports)
         isGood = prompt("Correct? [Y/n]", "green")
         if isGood in ("", "y", "yes", "Y", "Yes"):
             break
+        else:
+            data['ports'] = []
     return data
 
 def addHost(network):
