@@ -8,8 +8,6 @@
     
 """
 
-from enum import Enum
-
 # Lists of Rules to build
 zonerules = []
 hostrules = []
