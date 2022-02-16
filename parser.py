@@ -8,6 +8,10 @@
     
 """
 
+import json
+
+from builder import main
+
 # Lists of Rules to build
 zonerules = []
 hostrules = []
@@ -18,7 +22,7 @@ badzonerules = []
 badhostrules = []
 badremotingrules = []
 
-Zone = ["WAN", "LAN", "DMZ"]
+Zone = ["WAN", "LAN", "DMZ", "cloud", "wan", "lan"]
 Action = ["ALLOW", "DENY"]
 
 def buildzonerule(source, dest, action):
@@ -108,7 +112,7 @@ def buildremotingrules(source, host, remotingname, remotingport, dest, action):
     else:
         # If the rule passes through all the checks 
         # Creates the rules with the parameters
-        remotingrule = source + " (Host: " + host + " | Service: " +  remotingname + " ["
+        remotingrule = source + " (Host: " + host + " | Remoting Protocol: " +  remotingname + " ["
         remotingrule += remotingport + "]) to " + dest + ": " + action
         # Adds the hostrule to the hostrules list
         remotingrules.append(remotingrule)
@@ -142,3 +146,53 @@ def test():
     print(badhostrules)
 
 test()
+
+## Networks: Dict. Items: List Network Defintions
+## Network Defintitions List. Items: Ip, Name, Hosts
+## Hosts: list. Items: host IP, name, os, remoting protocol, service
+## Remoting Protocol: list. Items: Name, list of ports
+## Service: list. Items: Name, list of ports
+
+def print_json():
+    with open("newtopology.json", "r") as read_file:
+        data = json.load(read_file)
+        
+        
+        for netid in data['networks']:
+            print("ip:", netid["ip"])
+            print("name:", netid["name"])
+            for host in netid['hosts']: 
+                print("hosts:", host)
+    # print(data)
+print_json()
+
+
+# parse_host will parse the host def and call buildhostrule/buildremotingrule
+def parse_host(netname, firstquads, host):
+    ip = firstquads + host["ip"]
+    # build services
+    for service in host["service"]:
+        for port in service["ports"]:
+            buildhostrules(netname, ip, service, port, "WAN", "ALLOW")
+    # build remoting
+    for remoting in host["remoting protocol"]:
+        for port in remoting["ports"]:
+            buildhostrules(netname, ip, remoting, port, "DMZ", "ALLOW")
+
+# parse_networks will iterate through the list of network definitions, 
+# identify the parameters, and call parse_host for each host in the network
+def parse_networks(netdict):
+    name = netdict["name"]
+    threequads = netdict["ip"]
+    hosts = netdict["hosts"]
+    for host in hosts:
+        parse_host(name, threequads, host)
+
+
+
+def main():
+    # open files
+    # set up parameters - call parse_networks
+    parse_networks()
+    # print to the list
+
