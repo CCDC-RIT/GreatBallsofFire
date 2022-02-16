@@ -87,6 +87,36 @@ def buildhostrules(source, host, servicename, serviceports, dest, action):
         # Adds the hostrule to the hostrules list
         hostrules.append(hostrule)
 
+def buildremotingrules(source, host, remotingname, remotingport, dest, action):
+    # build remoting rule will take in a source zone, a host ip, and a remoting protocol, a destination zone, and an action and add the rule to the host rules list
+    if source not in Zone:
+        # log Invalid source error
+        error  = "Invalid Source: " + source + " to " + dest + ": " + action
+        badremotingrules.append(error)
+    elif dest not in Zone:
+        # log Invalid Destination error
+        error  = "Invalid Destination: " + source + " to " + dest + ": " + action
+        badremotingrules.append(error)
+    elif action not in Action:
+        # log Invalid Action error
+        error  = "Invalid Action: " + source + " to " + dest + ": " + action
+        badremotingrules.append(error)
+    elif source == dest: 
+        # log Source and Destination Equal error
+        error  = "Source and Destination Equal: " + source + " to " + dest + ": " + action
+        badremotingrules.append(error)
+    else:
+        # If the rule passes through all the checks 
+        # Creates the rules with the parameters
+        remotingrule = source + " (Host: " + host + " | Service: " +  remotingname + " ["
+        remotingrule += remotingport + "]) to " + dest + ": " + action
+        # Adds the hostrule to the hostrules list
+        remotingrules.append(remotingrule)
+
+
+#import/open the json file and read
+#parse through the json file 
+
 def test():
     # Basic Test function that does error checking and prints the lists
     buildzonerule("WAN", "LAN", "ALLOW")
