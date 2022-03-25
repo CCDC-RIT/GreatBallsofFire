@@ -75,17 +75,17 @@ def buildhostrules(source, host, servicename, serviceports, dest, action):
         #It starts by creating the string wiht the basic information
         hostrule = source + " (Host: " + host + " | Service: " +  servicename + " ["
         # Splits the service ports
-        ports = serviceports.split(",")
+        #ports = serviceports.split(",")
         # Interates through the split strings
         # Done this way to make them appear better after created 
-        for i in range(len(ports)):
+        for i in range(len(serviceports)):
             # Checks if the port is the last in the list (purely for visual)
-            if i == len(ports) - 1:
+            if i == len(serviceports) - 1:
                 # Adds it to the rule
-                hostrule +=  ports[i]
+                hostrule +=  serviceports[i]
             else:
                 # Otherwise adds the port to the rule and moves on to the next port  
-                hostrule +=  ports[i] + ", "
+                hostrule +=  serviceports[i] + ", "
         # Finishes creting the hostrule string
         hostrule += "]) to " + dest + ": " + action
         # Adds the hostrule to the hostrules list
@@ -113,7 +113,18 @@ def buildremotingrules(source, host, remotingname, remotingport, dest, action):
         # If the rule passes through all the checks 
         # Creates the rules with the parameters
         remotingrule = source + " (Host: " + host + " | Remoting Protocol: " +  remotingname + " ["
-        remotingrule += remotingport + "]) to " + dest + ": " + action
+        
+
+        for i in range(len(remotingport)):
+            # Checks if the port is the last in the list (purely for visual)
+            if i == len(remotingport) - 1:
+                # Adds it to the rule
+                remotingrule +=  remotingport[i]
+            else:
+                # Otherwise adds the port to the rule and moves on to the next port  
+                remotingrule +=  remotingport[i] + ", "
+        # Finishes creting the hostrule string
+        remotingrule += "]) to " + dest + ": " + action
         # Adds the hostrule to the hostrules list
         remotingrules.append(remotingrule)
 
@@ -145,7 +156,7 @@ def test():
     print("Bad Host rules: ") 
     print(badhostrules)
 
-test()
+#test()
 
 ## Networks: Dict. Items: List Network Defintions
 ## Network Defintitions List. Items: Ip, Name, Hosts
@@ -164,20 +175,20 @@ def print_json():
             for host in netid['hosts']: 
                 print("hosts:", host)
     # print(data)
-print_json()
+#print_json()
 
 
 # parse_host will parse the host def and call buildhostrule/buildremotingrule
 def parse_host(netname, firstquads, host):
-    ip = firstquads + host["ip"]
+    ip = firstquads + "." + host["ip"]
     # build services
-    for service in host["service"]:
+    for service in host["services"]:
         for port in service["ports"]:
-            buildhostrules(netname, ip, service, port, "WAN", "ALLOW")
+            buildhostrules(netname, ip, service["serviceName"], service["ports"], "WAN", "ALLOW")
     # build remoting
     for remoting in host["remoting protocol"]:
         for port in remoting["ports"]:
-            buildhostrules(netname, ip, remoting, port, "DMZ", "ALLOW")
+            buildremotingrules(netname, ip, remoting["remotingProtocol"], remoting["ports"], "DMZ", "ALLOW")
 
 # parse_networks will iterate through the list of network definitions, 
 # identify the parameters, and call parse_host for each host in the network
@@ -192,7 +203,22 @@ def parse_networks(netdict):
 
 def main():
     # open files
+    with open("newtopology.json", "r") as read_file:
+        data = json.load(read_file)
     # set up parameters - call parse_networks
-    parse_networks()
+        for netid in data['networks']:
+            parse_networks(netid)
     # print to the list
-
+        print("Zone rules:")
+        print(zonerules)
+        print("Bad Zone rules: ")
+        print(badzonerules)
+        print("Host rules: ")
+        print(hostrules)
+        print("Bad Host rules: ") 
+        print(badhostrules)
+        print("Remoting rules: ")
+        print(remotingrules)
+        print("Bad Remoting rules: ") 
+        print(badremotingrules)
+main()
