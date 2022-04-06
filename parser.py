@@ -22,7 +22,7 @@ badzonerules = []
 badhostrules = []
 badremotingrules = []
 
-Zone = ["WAN", "LAN", "DMZ", "cloud", "wan", "lan"]
+Zone = ["WAN", "DMZ"]
 Action = ["ALLOW", "DENY"]
 
 def buildzonerule(source, dest, action):
@@ -207,6 +207,7 @@ def main():
         data = json.load(read_file)
     # set up parameters - call parse_networks
         for netid in data['networks']:
+            Zone.append(netid["name"])
             parse_networks(netid)
     # print to the list
         print("Zone rules:")
